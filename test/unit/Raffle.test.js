@@ -106,7 +106,9 @@ const { developmentChains, networkConfig } = require("../../helper-hardhat-confi
               })
 
               it("Reverts when checkupkeep is false", async function () {
-                  await expect(raffle.performUpkeep()).to.be.revertedWith("Raffle__UpkeepNotNeeded")
+                  await expect(raffle.performUpkeep([])).to.be.revertedWith(
+                      "Raffle__UpkeepNotNeeded"
+                  )
               })
 
               it("Updates the raffle state, emits an event, and calls the VRF coordinator", async function () {
@@ -115,9 +117,9 @@ const { developmentChains, networkConfig } = require("../../helper-hardhat-confi
                   await network.provider.send("evm_mine", [])
                   const txResponse = await raffle.performUpkeep([])
                   const txReceipt = await txResponse.wait(1)
-                  const requestId = txReceipt.events[1].args.requestId // Index is 1 cause VRFCoordinator already emited an event by this time
+                  const requestId = txReceipt.events[1].args // Index is 1 cause VRFCoordinator already emited an event by this time
                   const raffleState = await raffle.getRaffleState()
-                  assert(requestId.toNumberg() > 0)
+                  assert(requestId.toString() != "0")
                   assert(raffleState.toString() == "1")
               })
           })
@@ -157,18 +159,21 @@ const { developmentChains, networkConfig } = require("../../helper-hardhat-confi
                       raffle.once("WinnerPicked", async () => {
                           console.log("Found the event!")
                           try {
-                              const recentWinner = await raffle.getRecentWinner()
-                              console.log(recentWinner)
-                              console.log(accounts[0].address)
-                              console.log(accounts[1].address)
-                              console.log(accounts[2].address)
-                              console.log(accounts[3].address)
                               const raffleState = await raffle.getRaffleState()
                               const endingTimeStamp = await raffle.getLatestTimeStamp()
                               const numPlayers = await raffle.getNumberOfPlayers()
+                              const winnerEngingBalance = await accounts[1].getBalance()
                               assert.equal(raffleState.toString(), "0")
                               assert.equal(numPlayers.toString(), "0")
                               assert(endingTimeStamp > startingTimeStamp)
+
+                              assert.equal(
+                                  winnerEngingBalance.toString(),
+                                  winnerStartingBalance
+                                      .add(raffleEntranceFee.mul(additionalEntrances + 1))
+                                      .toString()
+                              )
+
                               resolve()
                           } catch (e) {
                               reject(e)
@@ -178,13 +183,12 @@ const { developmentChains, networkConfig } = require("../../helper-hardhat-confi
                       const txResponse = await raffle.performUpkeep([])
                       const txReceipt = await txResponse.wait(1)
 
-                      console.log(txReceipt.events[1].args.toString())
+                      const winnerStartingBalance = await accounts[1].getBalance()
 
                       await vrfCoordinatorV2Mock.fulfillRandomWords(
                           txReceipt.events[1].args.toString(),
                           raffle.address
                       )
-                      raffle.emit("WinnerPicked") // this is a test to force the event
                   })
               })
           })
