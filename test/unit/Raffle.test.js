@@ -178,8 +178,10 @@ const { developmentChains, networkConfig } = require("../../helper-hardhat-confi
                       const txResponse = await raffle.performUpkeep([])
                       const txReceipt = await txResponse.wait(1)
 
+                      console.log(txReceipt.events[1].args.toString())
+
                       await vrfCoordinatorV2Mock.fulfillRandomWords(
-                          txReceipt.events[1].args.requestId,
+                          txReceipt.events[1].args.toString(),
                           raffle.address
                       )
                       raffle.emit("WinnerPicked") // this is a test to force the event
