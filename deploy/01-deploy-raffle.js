@@ -1,6 +1,6 @@
 const { network, ethers } = require("hardhat")
 const { developmentChains, networkConfig } = require("../helper-hardhat-config")
-const { verify } = require("../helper-hardhat-config")
+const { verify } = require("../utils/verify")
 
 const VRF_SUB_FUND_AMOUNT = ethers.utils.parseEther("2")
 
@@ -52,7 +52,7 @@ module.exports = async function ({ getNamedAccounts, deployments }) {
     // I need to add raffle as consumer for vrfCoordinatorV2Mock if I want to force performUpkeep in unit testing
     if (developmentChains.includes(network.name)) {
         await vrfCoordinatorV2Mock.addConsumer(subscriptionId, raffle.address)
-        log("Raffle contract added as consumer to the VRF Mock")
+        log("Raffle contract added as consumer is added to the VRF Mock")
     }
     log("--------------------------------------")
 }

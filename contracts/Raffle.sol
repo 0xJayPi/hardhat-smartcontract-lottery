@@ -96,13 +96,14 @@ contract Raffle is VRFConsumerBaseV2, KeeperCompatibleInterface {
         bool hasBalance = address(this).balance > 0;
         // upkeepNeeded was already initialized inside the returns () of this function
         upkeepNeeded = (isOpen && timePassed && hasPlayers && hasBalance);
+        return (upkeepNeeded, "0x0");
     }
 
     function performUpkeep(
         bytes calldata /* performData */
     ) external override {
         // Request the random number
-        // Once we have it, dow something with it
+        // Once we have it, do something with it
         // 2 transactions process
 
         // Since this function is external, we want to make sure that it only get triggered when it's time
