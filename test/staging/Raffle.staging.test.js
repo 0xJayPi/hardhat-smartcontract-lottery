@@ -27,18 +27,18 @@ developmentChains.includes(network.name)
                           try {
                               const recentWinner = await raffle.getRecentWinner()
                               const raffleState = await raffle.getRaffleState()
-                              const winnerEndingBalance = await accounts[0].getBalance()
+                              // const winnerEndingBalance = await accounts[0].getBalance()
                               const endingTimeStamp = await raffle.getLatestTimeStamp()
 
                               await expect(raffle.getPlayer(0)).to.be.reverted
                               assert.equal(recentWinner.toString(), accounts[0].address)
                               assert.equal(raffleState, 0)
-                              //To assert the balances, I should calculate the gas cost of Raffle.sol:140
+                              // To assert the balances, I should calculate the gas cost of Raffle.sol:140
                               //   assert.equal(
                               //       winnerEndingBalance.toString(),
                               //       winnerStartingBalance.add(raffleEntranceFee).toString()
                               //   )
-                              //   assert(endingTimeStamp > startingTimeStamp)
+                              assert(endingTimeStamp > startingTimeStamp)
 
                               resolve()
                           } catch (e) {
