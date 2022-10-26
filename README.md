@@ -92,8 +92,6 @@ Go back to [vrf.chain.link](https://vrf.chain.link) and under your subscription 
 
 Go to [keepers.chain.link](https://keepers.chain.link/new) and register a new upkeep. Choose `Custom logic` as your trigger mechanism for automation. Your UI will look something like this once completed:
 
-![Keepers](./img/keepers.png)
-
 6. Enter your raffle!
 
 You're contract is now setup to be a tamper proof autonomous verifiably random lottery. Enter the lottery by running:
