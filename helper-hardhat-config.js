@@ -1,6 +1,10 @@
 const { ethers } = require("hardhat")
 
 const networkConfig = {
+    default: {
+        name: "hardhat",
+        keepersUpdateInterval: "30",
+    },
     5: {
         name: "goerli",
         vrfCoordinatorV2: "0x2Ca8E0C643bDe4C2E08ab1fA0da3401AdAD7734D",
@@ -20,8 +24,14 @@ const networkConfig = {
 }
 
 const developmentChains = ["hardhat", "localhost"]
+const VERIFICATION_BLOCK_CONFIRMATIONS = 6
+const frontEndContractsFile = "../nextjs-smartcontract-lottery/constants/contractAddresses.json"
+const frontEndAbiFile = "../nextjs-smartcontract-lottery/constants/abi.json"
 
 module.exports = {
     networkConfig,
     developmentChains,
+    VERIFICATION_BLOCK_CONFIRMATIONS,
+    frontEndContractsFile,
+    frontEndAbiFile,
 }
